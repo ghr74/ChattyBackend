@@ -58,9 +58,6 @@ public sealed class AuthRepository(
         var resultEnum = await conn.QueryAsync<AuthUser>(query, new { email });
         var result = resultEnum.AsList();
 
-        // TODO: log an error here
-        Debug.Assert(result.Count == 1);
-
-        return result.FirstOrDefault();
+        return result.SingleOrDefault();
     }
 }

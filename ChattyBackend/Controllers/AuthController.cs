@@ -5,20 +5,20 @@ using Microsoft.AspNetCore.Mvc;
 namespace ChattyBackend.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("auth")]
 public sealed class AuthController(ILogger<AuthController> logger, IAuthHandler authHandler)
     : Controller
 {
     [HttpPost("/register")]
-    public async Task<IActionResult> Register(RegisterRequest request)
+    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
         var result = await authHandler.Register(request);
-        return Ok(result);
+        return result ? Created() : Conflict();
     }
 
     // this returns a token
     [HttpPost("/login")]
-    public async Task<IActionResult> Login(LoginRequest request)
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
         var result = await authHandler.Login(request);
         return Ok(result);

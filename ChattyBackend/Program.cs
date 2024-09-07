@@ -3,6 +3,7 @@ using ChattyBackend.Handlers;
 using ChattyBackend.Handlers.Interfaces;
 using ChattyBackend.Helpers;
 using ChattyBackend.Helpers.Interfaces;
+using ChattyBackend.Models.Users;
 using ChattyBackend.Repositories;
 using ChattyBackend.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -53,6 +54,8 @@ builder.Services.AddSingleton<IPasswordHasher, ArgonPasswordHasher>();
 builder.Services.AddSingleton<ISqlConnectionProvider, SqlConnectionProvider>();
 builder.Services.AddSingleton<IAuthHandler, AuthHandler>();
 builder.Services.AddSingleton<IAuthRepository, AuthRepository>();
+builder.Services.AddSingleton<IUsersHandler, UsersHandler>();
+builder.Services.AddSingleton<IUsersRepository, UsersRepository>();
 builder.Services.AddSingleton<TokenService, TokenService>();
 
 builder.Services.AddProblemDetails();
@@ -79,6 +82,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(b =>
+{
+    b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+});
 
 app.UseHttpsRedirection();
 

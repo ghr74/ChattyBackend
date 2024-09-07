@@ -16,19 +16,19 @@ public sealed class AuthHandler(
 {
     private string _signupSecret = File.ReadAllText("toucan2.txt");
 
-    public async Task<Guid?> Register(RegisterRequest request)
+    public async Task<bool> Register(RegisterRequest request)
     {
         var (email, password, username, secret) = request;
 
         var secretIsRight = secret == _signupSecret;
         if (!secretIsRight)
-            return null;
+            return false;
 
         var user = new AuthUser(Guid.NewGuid(), email, password, username);
 
         var result = await authRepository.RegisterUser(user);
 
-        return result ? user.Id : null;
+        return result;
     }
 
     public async Task<AuthResponse?> Login(LoginRequest request)
